@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {CardActions, Typography, CardContent, Button, Modal, Card, FormControl, TextField} from "@mui/material"
 import './App.css';
-import {postTask} from './api';
-import axios from 'axios';
+import {getAllTasks, postTask} from './api';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -16,9 +15,27 @@ const style = {
   p: 4,
 };
 
+
 const App = () => {
+
+  const [taskData, setTaskData] = React.useState([]);
+
+  const retrieveTaskData = async () => {
+      setTaskData(await getAllTasks());
+      console.log(taskData)
+  }
+
+  useEffect(() => {
+    retrieveTaskData();
+  }, [])
+
   return (
-    <TaskModal></TaskModal>
+    <><TaskModal></TaskModal>
+    <div>
+      {taskData?.map((data) => (
+        <li key={data}></li>
+      ))}
+    </div></>
   );
 }
 
@@ -54,19 +71,15 @@ const TaskModal = () => {
                         </CardContent>
                         <CardActions>
                             
-                            <Button style={{display:'flex',alignItems:'center',justifyContent:'center'}} onClick={() => handleClose()} size="small" data-cy='close'>Close</Button>
+                            <Button style={{display:'flex',alignItems:'center',justifyContent:'center'}} onClick={ () => handleClose()} size="small" data-cy='close'>Close</Button>
                             
                             <Button style={{display:'flex',alignItems:'center',justifyContent:'center'}} onClick={ async () => {handleClose();
-                            // //console.log(name, desc);
-                            // // const resolve = await post('http://localhost:8000/api/task', {name, desc});
-                            // const resolve = await postTask({name, desc});
-                            // console.log(resolve);
-                            // setName("");
-                            // setDesc("");
-                            const data = await axios.post("http://localhost:8000/api/test", {test: "test"},  {headers: { 
-                              'Content-Type': 'application/json'
-                            }}) 
-                            console.log(data)
+                            //console.log(name, desc);
+                            // const resolve = await post('http://localhost:8000/api/task', {name, desc});
+                            const resolve = await postTask({name, desc});
+                            console.log(resolve);
+                            setName("");
+                            setDesc("");
                             }} size='small' data-cy='submit'>Submit</Button>
                         
                         </CardActions>
