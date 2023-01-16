@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {CardActions, Typography, CardContent, Button, Modal, Card, FormControl, TextField} from "@mui/material"
+import {CardActions, Typography, CardContent, Button, Modal, Card, FormControl, TextField, CardHeader} from "@mui/material"
 import './App.css';
 import {getAllTasks, postTask} from './api';
 
@@ -18,7 +18,7 @@ const style = {
 
 const App = () => {
 
-  const [taskData, setTaskData] = React.useState([]);
+  const [taskData, setTaskData] = React.useState<{name: string, desc: string}[] | any[]>([]);
 
   const retrieveTaskData = async () => {
       setTaskData(await getAllTasks());
@@ -33,7 +33,7 @@ const App = () => {
     <><TaskModal></TaskModal>
     <div>
       {taskData?.map((data) => (
-        <li key={data}></li>
+        <Task key={data} task={data}></Task>
       ))}
     </div></>
   );
@@ -88,6 +88,16 @@ const TaskModal = () => {
                 </Card>
       </Modal>
     </div>
+  );
+}
+
+
+const Task = ({task}: {name: string, desc:string} | any) => {
+  return(
+    <Card sx={{ minWidth: 275 }}>
+      <Typography variant='h3' align='center'>Name: {task.name}</Typography>
+      <Typography variant='h4' align='center'>Description: {task.desc}</Typography>
+    </Card>
   );
 }
 
