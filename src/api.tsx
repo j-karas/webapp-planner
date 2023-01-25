@@ -16,29 +16,10 @@ export const getAllTasks = async () =>{
   return response.data.data;
 }
 
+export const deleteTask = async(id: number) =>{
+  const response = await TaskApi.delete(`/api/task/${id}`);
+  console.log(response);
+  return response.data;
+}
+
 export default TaskApi;
-
-
-
-
-
-// export async function post(url: string, data: any) {
-//     const response = await fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(data)
-//     });
-//     return await response.json();
-//   }
-
-//   export async function get(url: string) {
-//     const response = await fetch(window.location.origin + url, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       }
-//     });
-//     return await response.json();
-//   }
