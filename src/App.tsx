@@ -5,6 +5,7 @@ import {deleteTask, getAllTasks, postTask} from './api';
 import { ClientRequest } from 'http';
 import { Box } from '@mui/system';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TaskProps, ContainerProps, TaskPost } from './types';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -21,11 +22,15 @@ const style = {
 
 const App = () => {
 
-  const [taskData, setTaskData] = React.useState<{name: string, desc: string}[] | any[]>([]);
+  const [taskData, setTaskData] = React.useState<TaskProps[] | []>([]);
 
-  const retrieveTaskData = async () => {
-      setTaskData(await getAllTasks());
-      console.log(taskData)
+  const retrieveTaskData = () => {
+    getAllTasks().then((response) => {
+      console.log(response.data)
+      setTaskData(response.data);
+    })
+
+   
   }
 
   useEffect(() => {
@@ -35,7 +40,7 @@ const App = () => {
   return (
     <><TaskModal></TaskModal>
     <div>
-      {taskData?.map((data) => (
+      {taskData.length && taskData?.map((data) => (
         <Task {...data}></Task>
       ))}
     </div></>
@@ -91,11 +96,6 @@ const TaskModal = () => {
   );
 }
 
-interface TaskProps {
-  id: number
-  name: string
-  desc: string
-}
 const Task = (props : TaskProps) => {
   return(
     <Card variant='outlined' sx={{
@@ -117,6 +117,8 @@ const Task = (props : TaskProps) => {
   );
 }
 
+// const taskContainer:React.FC<ContainerProps>  = ({title, taskArray}) => {
 
+// }
 
 export default App;
