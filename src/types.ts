@@ -2,6 +2,7 @@ export interface TaskProps {
     id: number
     name: string
     desc: string
+    refetch: () => void
 }
 
 export interface TaskPost {
@@ -13,3 +14,4 @@ export interface ContainerProps {
     title: string
     taskArray : TaskProps[]
   }
+

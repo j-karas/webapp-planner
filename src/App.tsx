@@ -5,7 +5,7 @@ import {deleteTask, getAllTasks, postTask} from './api';
 import { ClientRequest } from 'http';
 import { Box } from '@mui/system';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TaskProps, ContainerProps, TaskPost } from './types';
+import { TaskProps, ContainerProps, TaskPost, } from './types';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,16 +38,16 @@ const App = () => {
   }, [])
 
   return (
-    <><TaskModal></TaskModal>
+    <><TaskModal refetch={retrieveTaskData} id={0} name={''} desc={''}></TaskModal>
     <div>
       {taskData.length && taskData?.map((data) => (
-        <Task {...data}></Task>
+        <Task {...data} refetch={retrieveTaskData}></Task>
       ))}
     </div></>
   );
 }
 
-const TaskModal = () => {
+const TaskModal:React.FC<TaskProps> = ({refetch}) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -85,6 +85,7 @@ const TaskModal = () => {
                 handleClose();
                 const resolve = await postTask({ name, desc });
                 console.log(resolve);
+                refetch();
                 setName("");
                 setDesc("");
               }} size='small' data-cy='submit'>Submit</Button>
@@ -96,7 +97,7 @@ const TaskModal = () => {
   );
 }
 
-const Task = (props : TaskProps) => {
+const Task:React.FC<TaskProps> = ({id, desc, name, refetch}) => {
   return(
     <Card variant='outlined' sx={{
       width: 275,
@@ -104,13 +105,14 @@ const Task = (props : TaskProps) => {
       boxShadow: 1
      }}>
       <CardContent>
-        <Typography variant='h6' sx={{fontWeight: 'bold'}} align='center'>{props.name}</Typography>
-        <Typography variant='body1' align='center'>{props.desc}</Typography>
+        <Typography variant='h6' sx={{fontWeight: 'bold'}} align='center'>{name}</Typography>
+        <Typography variant='body1' align='center'>{desc}</Typography>
       </CardContent>
       <CardActions>
         <Button startIcon={<DeleteIcon/>} onClick={async () => {
-          const resolve = await deleteTask(props.id);
+          const resolve = await deleteTask(id);
           console.log(resolve)
+          refetch();
         }}>Delete</Button>  
       </CardActions>
     </Card>
